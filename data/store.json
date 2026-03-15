@@ -1,0 +1,68 @@
+{
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Streaming",
+      "slug": "streaming",
+      "description": "Akun premium untuk hiburan film, musik, dan video tanpa batas."
+    },
+    {
+      "id": "cat-2",
+      "name": "Produktivitas",
+      "slug": "produktivitas",
+      "description": "Tools kerja dan kolaborasi untuk pelajar, freelancer, dan bisnis."
+    },
+    {
+      "id": "cat-3",
+      "name": "AI Tools",
+      "slug": "ai-tools",
+      "description": "Akses aplikasi AI premium untuk membuat konten, coding, dan desain."
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-1",
+      "name": "ChatGPT Premium Shared",
+      "slug": "chatgpt-premium-shared",
+      "short_description": "Akses AI premium untuk menulis, riset, dan coding harian.",
+      "description": "Paket akun premium dengan performa cepat, cocok untuk pelajar, kreator konten, dan admin bisnis yang butuh efisiensi kerja. Sudah termasuk panduan aktivasi dan support admin.",
+      "price": 75000,
+      "promo_price": 59000,
+      "status": "available",
+      "category_id": "cat-3",
+      "features": ["Aktivasi cepat", "Support admin", "Panduan penggunaan", "Cocok untuk kerja harian"],
+      "product_images": [{"id": "img-1", "image_url": "https://images.unsplash.com/photo-1677442135136-760c813028c0?auto=format&fit=crop&w=1200&q=80", "alt_text": "AI dashboard", "is_cover": true}]
+    },
+    {
+      "id": "prod-2",
+      "name": "Canva Pro Team",
+      "slug": "canva-pro-team",
+      "short_description": "Desain premium untuk kebutuhan konten bisnis dan sosial media.",
+      "description": "Canva Pro Team cocok untuk UMKM, reseller, dan social media specialist. Akses template premium, background remover, brand kit, dan export kualitas tinggi.",
+      "price": 45000,
+      "promo_price": null,
+      "status": "limited",
+      "category_id": "cat-2",
+      "features": ["Template premium", "Brand kit", "Magic resize", "Background remover"],
+      "product_images": [{"id": "img-2", "image_url": "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=1200&q=80", "alt_text": "Design workspace", "is_cover": true}]
+    },
+    {
+      "id": "prod-3",
+      "name": "Netflix Premium 1 Bulan",
+      "slug": "netflix-premium-1-bulan",
+      "short_description": "Streaming film dan series favorit dengan kualitas premium.",
+      "description": "Paket Netflix Premium untuk hiburan pribadi atau keluarga. Cocok untuk penjual akun digital yang ingin katalog lebih variatif dan menarik.",
+      "price": 65000,
+      "promo_price": 55000,
+      "status": "available",
+      "category_id": "cat-1",
+      "features": ["Full HD/4K", "Tayangan lengkap", "Masa aktif 1 bulan", "Fast response"],
+      "product_images": [{"id": "img-3", "image_url": "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1200&q=80", "alt_text": "Streaming setup", "is_cover": true}]
+    }
+  ],
+  "testimonials": [
+    {"id": "ts-1", "customer_name": "Rina", "role": "Content Creator", "message": "Proses order cepat, admin responsif, dan akun langsung aktif. Web-nya juga bikin produk kelihatan lebih profesional.", "rating": 5},
+    {"id": "ts-2", "customer_name": "Fajar", "role": "Mahasiswa", "message": "Saya suka karena tinggal pilih produk lalu klik WhatsApp. Praktis banget buat order tanpa ribet checkout panjang.", "rating": 5},
+    {"id": "ts-3", "customer_name": "Nabila", "role": "UMKM Owner", "message": "Dashboard admin memudahkan saya update harga dan stok kapan saja. Cocok untuk jualan produk digital premium.", "rating": 5}
+  ]
+}
