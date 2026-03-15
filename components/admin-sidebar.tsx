@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { logoutAdmin } from "@/app/admin/actions";
 
 const links = [
   { href: "/admin/dashboard", label: "Dashboard" },
@@ -18,6 +19,9 @@ export function AdminSidebar() {
           </Link>
         ))}
       </div>
+      <form action={logoutAdmin} className="mt-6">
+        <button className="btn-secondary w-full">Logout</button>
+      </form>
     </aside>
   );
 }
