@@ -12,6 +12,8 @@ export type ProductImage = {
   is_cover: boolean;
 };
 
+export type ProductStatus = "available" | "limited" | "sold_out";
+
 export type Product = {
   id: string;
   name: string;
@@ -20,7 +22,7 @@ export type Product = {
   description: string;
   price: number;
   promo_price: number | null;
-  status: "available" | "limited" | "sold_out";
+  status: ProductStatus;
   category_id: string;
   category?: Category;
   product_images?: ProductImage[];
