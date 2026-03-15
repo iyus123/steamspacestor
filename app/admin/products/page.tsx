@@ -1,19 +1,25 @@
 import Link from "next/link";
-import { products } from "@/lib/dummy-data";
+import { deleteProductAction } from "@/app/admin/actions";
+import { getProducts } from "@/lib/data-store";
 import { formatCurrency } from "@/lib/utils";
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage({ searchParams }: { searchParams?: Promise<{ success?: string; error?: string }> }) {
+  const [products, params] = await Promise.all([getProducts(), searchParams]);
+  const success = params?.success;
+  const error = params?.error;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-black text-slate-950">Kelola Produk</h1>
-          <p className="mt-2 text-slate-600">Tambah, edit, dan atur status setiap produk premium.</p>
+          <p className="mt-2 text-slate-600">Tambah, edit, hapus, dan atur status setiap produk premium.</p>
         </div>
-        <Link href="/admin/products/new" className="btn-primary">
-          Tambah Produk
-        </Link>
+        <Link href="/admin/products/new" className="btn-primary">Tambah Produk</Link>
       </div>
+
+      {success ? <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{success}</p> : null}
+      {error ? <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
@@ -35,9 +41,13 @@ export default function AdminProductsPage() {
                   <td className="px-6 py-4">{product.category?.name}</td>
                   <td className="px-6 py-4 capitalize">{product.status}</td>
                   <td className="px-6 py-4">
-                    <Link href={`/admin/products/${product.id}/edit`} className="font-semibold text-brand">
-                      Edit
-                    </Link>
+                    <div className="flex items-center gap-4">
+                      <Link href={`/admin/products/${product.id}/edit`} className="font-semibold text-brand">Edit</Link>
+                      <form action={deleteProductAction}>
+                        <input type="hidden" name="id" value={product.id} />
+                        <button className="font-semibold text-red-600">Hapus</button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}
