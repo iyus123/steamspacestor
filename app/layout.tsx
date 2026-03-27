@@ -1,21 +1,20 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { Providers } from "@/components/providers";
+import Footer from "@/components/footer";
+import HelpButton from "@/components/help-button";
+import Navbar from "@/components/navbar";
 
-export const metadata: Metadata = {
-  title: "SteamSpace",
-  description: "Portal Game, Aplikasi Premium, dan Produk Digital Terpercaya",
-  icons: {
-    icon: "/favicon.png"
-  }
-};
-
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function StoreLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <body>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+    <>
+      <Navbar />
+      <main className="pt-24 sm:pt-28">
+        {children}
+      </main>
+      <HelpButton />
+      <Footer />
+    </>
   );
 }
