@@ -7,6 +7,18 @@ import { ProductCard } from "@/components/product-card";
 import { CategoryIcon } from "@/components/category-icon";
 import { Reveal } from "@/components/reveal";
 
+function createWhatsAppLink(product: Product, categoryName: string, phone: string) {
+  const message = `Halo SteamSpace, saya ingin order produk:
+
+Produk: ${product.name}
+Kategori: ${categoryName}
+Harga: ${product.price}
+
+Apakah masih tersedia?`;
+
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
+
 export function ProductsCatalog({
   products,
   categories,
@@ -35,6 +47,10 @@ export function ProductsCatalog({
       return matchesCategory && matchesKeyword;
     });
   }, [products, keyword, activeCategory]);
+
+  const categoryMap = useMemo(() => {
+    return Object.fromEntries(categories.map((category) => [category.id, category.name]));
+  }, [categories]);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -139,11 +155,20 @@ export function ProductsCatalog({
 
       {filteredProducts.length ? (
         <div className="grid grid-cols-1 gap-3 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {filteredProducts.map((product, index) => (
-            <Reveal key={product.id} delay={(index % 6) * 60}>
-              <ProductCard product={product} phone={phone} />
-            </Reveal>
-          ))}
+          {filteredProducts.map((product, index) => {
+            const categoryName = categoryMap[product.category_id] ?? "Produk Digital";
+            const whatsappLink = createWhatsAppLink(product, categoryName, phone);
+
+            return (
+              <Reveal key={product.id} delay={(index % 6) * 60}>
+                <ProductCard
+                  product={product}
+                  categoryName={categoryName}
+                  whatsappLink={whatsappLink}
+                />
+              </Reveal>
+            );
+          })}
         </div>
       ) : (
         <div className="card p-6 text-center sm:p-10">
