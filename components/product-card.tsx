@@ -12,11 +12,23 @@ export function ProductCard({
   categoryName: string;
   whatsappLink: string;
 }) {
+  const imageSrc =
+    product.product_images?.find((img) => img.is_cover)?.image_url ||
+    product.product_images?.[0]?.image_url ||
+    "/placeholder.jpg";
+
+  const isAvailable = product.status === "available";
+
+  const displayPrice =
+    product.promo_price && product.promo_price > 0
+      ? `Rp ${product.promo_price.toLocaleString("id-ID")}`
+      : `Rp ${product.price.toLocaleString("id-ID")}`;
+
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
       <div className="relative aspect-[4/2.4] overflow-hidden bg-slate-100 dark:bg-slate-800">
         <Image
-          src={product.image}
+          src={imageSrc}
           alt={product.name}
           fill
           className="object-cover transition duration-500 hover:scale-105"
@@ -25,12 +37,12 @@ export function ProductCard({
         <div className="absolute left-2.5 top-2.5">
           <span
             className={`rounded-full px-2.5 py-1 text-[10px] font-semibold shadow-sm ${
-              product.available
+              isAvailable
                 ? "bg-emerald-500 text-white"
                 : "bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-100"
             }`}
           >
-            {product.available ? "Tersedia" : "Kosong"}
+            {isAvailable ? "Tersedia" : "Kosong"}
           </span>
         </div>
       </div>
@@ -44,9 +56,17 @@ export function ProductCard({
           {product.name}
         </h3>
 
-        <p className="mt-1.5 text-sm font-bold text-slate-950 dark:text-white sm:text-base">
-          {product.price}
-        </p>
+        <div className="mt-1.5">
+          <p className="text-sm font-bold text-slate-950 dark:text-white sm:text-base">
+            {displayPrice}
+          </p>
+
+          {product.promo_price && product.promo_price > 0 ? (
+            <p className="mt-1 text-[11px] text-slate-400 line-through">
+              Rp {product.price.toLocaleString("id-ID")}
+            </p>
+          ) : null}
+        </div>
 
         {product.short_description ? (
           <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-slate-500 dark:text-slate-400 sm:text-xs">
