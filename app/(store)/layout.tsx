@@ -10,9 +10,7 @@ export default function StoreLayout({
   return (
     <>
       <Navbar />
-      <main className="pt-24 sm:pt-28">
-        {children}
-      </main>
+      <main className="pt-20 sm:pt-24">{children}</main>
       <HelpButton />
       <Footer />
     </>
