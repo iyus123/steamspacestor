@@ -1,17 +1,20 @@
 export function SectionTitle({
   badge,
   title,
-  description
+  description,
+  align = "left"
 }: {
-  badge: string;
+  badge?: string;
   title: string;
-  description: string;
+  description?: string;
+  align?: "left" | "center";
 }) {
+  const center = align === "center";
   return (
-    <div className="mx-auto mb-10 max-w-2xl text-center">
-      <span className="badge">{badge}</span>
-      <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{title}</h2>
-      <p className="mt-3 text-base text-slate-600">{description}</p>
+    <div className={center ? "mx-auto mb-10 max-w-3xl text-center" : "mb-10 max-w-3xl"}>
+      {badge ? <span className="badge">{badge}</span> : null}
+      <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">{title}</h2>
+      {description ? <p className="mt-4 text-base leading-8 text-slate-600 dark:text-slate-400">{description}</p> : null}
     </div>
   );
 }
