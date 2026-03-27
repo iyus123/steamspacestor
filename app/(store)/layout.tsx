@@ -1,14 +1,20 @@
-import { Footer } from "@/components/footer";
-import { HelpButton } from "@/components/help-button";
+import Footer from "@/components/footer";
+import HelpButton from "@/components/help-button";
 import Navbar from "@/components/navbar";
 
-export default function StoreLayout({ children }: { children: React.ReactNode }) {
+export default function StoreLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
-      <Footer />
+      <main className="pt-24 sm:pt-28">
+        {children}
+      </main>
       <HelpButton />
+      <Footer />
     </>
   );
 }
