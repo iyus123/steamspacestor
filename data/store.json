@@ -1,68 +1,412 @@
 {
+  "settings": {
+    "name": "SteamSpace",
+    "slogan": "Portal Game, Aplikasi Premium, dan Produk Digital Terpercaya",
+    "hero": "Portal produk digital terpercaya, cepat, dan murah.",
+    "description": "SteamSpace adalah toko digital yang menyediakan berbagai produk seperti game Steam, aplikasi premium, akun digital, serta berbagai produk menarik lainnya dengan harga terjangkau. Kami berkomitmen memberikan layanan cepat, aman, dan terpercaya dengan proses pembelian yang mudah melalui WhatsApp.",
+    "whatsapp": "6295320724689",
+    "email": "fajrifairilhaq@gmail.com",
+    "hours": "08.00 - 23.00",
+    "instagram": "@steamspacee",
+    "tiktok": "@steamspacee",
+    "accent": "#3B82F6"
+  },
   "categories": [
     {
-      "id": "cat-1",
-      "name": "Streaming",
-      "slug": "streaming",
-      "description": "Akun premium untuk hiburan film, musik, dan video tanpa batas."
+      "id": "cat-apps",
+      "name": "APP PREMIUM dan STREAMING",
+      "slug": "app-premium-dan-streaming",
+      "description": "Aplikasi premium, streaming, AI tools, musik, produktivitas, dan cloud storage.",
+      "icon": "app"
     },
     {
-      "id": "cat-2",
-      "name": "Produktivitas",
-      "slug": "produktivitas",
-      "description": "Tools kerja dan kolaborasi untuk pelajar, freelancer, dan bisnis."
+      "id": "cat-topup",
+      "name": "TOPUP DAN GAME",
+      "slug": "topup-dan-game",
+      "description": "Top up game, voucher game, Steam Wallet, dan kebutuhan gamers.",
+      "icon": "gamepad"
     },
     {
-      "id": "cat-3",
-      "name": "AI Tools",
-      "slug": "ai-tools",
-      "description": "Akses aplikasi AI premium untuk membuat konten, coding, dan desain."
+      "id": "cat-loak",
+      "name": "LOAK (PRELOVED)",
+      "slug": "loak-preloved",
+      "description": "Barang bekas owner dan stok digital terbatas dengan harga menarik.",
+      "icon": "box"
     }
   ],
   "products": [
     {
-      "id": "prod-1",
-      "name": "ChatGPT Premium Shared",
-      "slug": "chatgpt-premium-shared",
-      "short_description": "Akses AI premium untuk menulis, riset, dan coding harian.",
-      "description": "Paket akun premium dengan performa cepat, cocok untuk pelajar, kreator konten, dan admin bisnis yang butuh efisiensi kerja. Sudah termasuk panduan aktivasi dan support admin.",
-      "price": 75000,
-      "promo_price": 59000,
+      "id": "prod-chatgpt-plus",
+      "name": "ChatGPT Plus",
+      "slug": "chatgpt-plus",
+      "short_description": "AI premium untuk belajar, kerja, dan bikin konten lebih cepat.",
+      "description": "Akses ChatGPT Plus untuk menggunakan AI dengan performa lebih cepat dan fitur lebih lengkap untuk belajar, bekerja, dan membuat konten.",
+      "price": 25000,
+      "promo_price": null,
       "status": "available",
-      "category_id": "cat-3",
-      "features": ["Aktivasi cepat", "Support admin", "Panduan penggunaan", "Cocok untuk kerja harian"],
-      "product_images": [{"id": "img-1", "image_url": "https://images.unsplash.com/photo-1677442135136-760c813028c0?auto=format&fit=crop&w=1200&q=80", "alt_text": "AI dashboard", "is_cover": true}]
+      "category_id": "cat-apps",
+      "features": [
+        "Akses cepat",
+        "Cocok untuk belajar dan kerja",
+        "Support admin via WhatsApp"
+      ],
+      "product_images": [
+        {
+          "id": "img-chatgpt",
+          "image_url": "https://images.unsplash.com/photo-1677442135136-760c813028c0?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "ChatGPT Plus",
+          "is_cover": true
+        }
+      ]
     },
     {
-      "id": "prod-2",
-      "name": "Canva Pro Team",
-      "slug": "canva-pro-team",
-      "short_description": "Desain premium untuk kebutuhan konten bisnis dan sosial media.",
-      "description": "Canva Pro Team cocok untuk UMKM, reseller, dan social media specialist. Akses template premium, background remover, brand kit, dan export kualitas tinggi.",
-      "price": 45000,
+      "id": "prod-canva-pro",
+      "name": "Canva Pro",
+      "slug": "canva-pro",
+      "short_description": "Template premium, elemen lengkap, dan desain tanpa watermark.",
+      "description": "Akses Canva Pro dengan ribuan template premium, elemen desain lengkap, dan fitur tanpa watermark untuk kebutuhan desain.",
+      "price": 10000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Template premium",
+        "Tanpa watermark",
+        "Cocok untuk kreator dan UMKM"
+      ],
+      "product_images": [
+        {
+          "id": "img-canva",
+          "image_url": "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Canva Pro",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-capcut-pro",
+      "name": "CapCut Pro",
+      "slug": "capcut-pro",
+      "short_description": "Efek premium, template eksklusif, dan export tanpa watermark.",
+      "description": "Akses CapCut Pro dengan fitur editing lengkap seperti efek premium, template eksklusif, dan export video tanpa watermark.",
+      "price": 15000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Template eksklusif",
+        "Efek premium",
+        "Export tanpa watermark"
+      ],
+      "product_images": [
+        {
+          "id": "img-capcut",
+          "image_url": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "CapCut Pro",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-lightroom-premium",
+      "name": "Lightroom Premium",
+      "slug": "lightroom-premium",
+      "short_description": "Preset premium, color grading, dan editing foto profesional.",
+      "description": "Akses Lightroom Premium untuk mengedit foto dengan fitur profesional seperti preset premium, color grading, dan editing tanpa batas.",
+      "price": 12000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Preset premium",
+        "Color grading",
+        "Workflow profesional"
+      ],
+      "product_images": [
+        {
+          "id": "img-lightroom",
+          "image_url": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Lightroom Premium",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-youtube-premium",
+      "name": "YouTube Premium",
+      "slug": "youtube-premium",
+      "short_description": "Tanpa iklan, background play, dan YouTube Music.",
+      "description": "Menonton YouTube tanpa iklan, bisa memutar video di background, dan akses YouTube Music Premium.",
+      "price": 15000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Tanpa iklan",
+        "Background play",
+        "YouTube Music"
+      ],
+      "product_images": [
+        {
+          "id": "img-youtube",
+          "image_url": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "YouTube Premium",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-spotify-premium",
+      "name": "Spotify Premium",
+      "slug": "spotify-premium",
+      "short_description": "Musik tanpa iklan, audio tinggi, dan bisa download lagu.",
+      "description": "Akses Spotify Premium untuk mendengarkan musik tanpa iklan, kualitas audio tinggi, dan bisa download lagu.",
+      "price": 12000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Audio tinggi",
+        "Tanpa iklan",
+        "Download lagu"
+      ],
+      "product_images": [
+        {
+          "id": "img-spotify",
+          "image_url": "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Spotify Premium",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-google-drive-premium",
+      "name": "Google Drive Premium",
+      "slug": "google-drive-premium",
+      "short_description": "Penyimpanan cloud lebih besar untuk file, foto, dan dokumen.",
+      "description": "Akses Google Drive Premium dengan kapasitas penyimpanan lebih besar untuk menyimpan file, foto, dan dokumen secara online.",
+      "price": 15000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-apps",
+      "features": [
+        "Storage besar",
+        "Sinkronisasi perangkat",
+        "Cocok untuk kerja dan kuliah"
+      ],
+      "product_images": [
+        {
+          "id": "img-drive",
+          "image_url": "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Google Drive Premium",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-gemini-ai-premium",
+      "name": "Gemini AI Premium",
+      "slug": "gemini-ai-premium",
+      "short_description": "AI terbaru untuk bantu kerja, belajar, dan brainstorming.",
+      "description": "Akses Gemini AI Premium untuk membantu pekerjaan, belajar, dan membuat konten dengan teknologi AI terbaru.",
+      "price": 20000,
       "promo_price": null,
       "status": "limited",
-      "category_id": "cat-2",
-      "features": ["Template premium", "Brand kit", "Magic resize", "Background remover"],
-      "product_images": [{"id": "img-2", "image_url": "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=1200&q=80", "alt_text": "Design workspace", "is_cover": true}]
+      "category_id": "cat-apps",
+      "features": [
+        "AI terbaru",
+        "Produktivitas meningkat",
+        "Cocok untuk riset dan konten"
+      ],
+      "product_images": [
+        {
+          "id": "img-gemini",
+          "image_url": "https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Gemini AI Premium",
+          "is_cover": true
+        }
+      ]
     },
     {
-      "id": "prod-3",
-      "name": "Netflix Premium 1 Bulan",
-      "slug": "netflix-premium-1-bulan",
-      "short_description": "Streaming film dan series favorit dengan kualitas premium.",
-      "description": "Paket Netflix Premium untuk hiburan pribadi atau keluarga. Cocok untuk penjual akun digital yang ingin katalog lebih variatif dan menarik.",
-      "price": 65000,
-      "promo_price": 55000,
+      "id": "prod-steam-wallet",
+      "name": "Steam Wallet",
+      "slug": "steam-wallet",
+      "short_description": "Top up saldo Steam untuk game, item, dan DLC favorit.",
+      "description": "Saldo Steam Wallet untuk pembelian game, item, atau konten digital langsung ke akun Steam kamu.",
+      "price": 50000,
+      "promo_price": null,
       "status": "available",
-      "category_id": "cat-1",
-      "features": ["Full HD/4K", "Tayangan lengkap", "Masa aktif 1 bulan", "Fast response"],
-      "product_images": [{"id": "img-3", "image_url": "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1200&q=80", "alt_text": "Streaming setup", "is_cover": true}]
+      "category_id": "cat-topup",
+      "features": [
+        "Proses cepat",
+        "Cocok untuk gamer Steam",
+        "Order via WhatsApp"
+      ],
+      "product_images": [
+        {
+          "id": "img-steamwallet",
+          "image_url": "https://images.unsplash.com/photo-1603481546579-65d935ba9cdd?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Steam Wallet",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-mobile-legends-diamond",
+      "name": "Mobile Legends Diamond",
+      "slug": "mobile-legends-diamond",
+      "short_description": "Diamond ML murah untuk skin, hero, dan event favorit.",
+      "description": "Top up Mobile Legends Diamond dengan proses cepat dan harga bersahabat untuk kebutuhan harian atau event.",
+      "price": 15000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-topup",
+      "features": [
+        "Top up cepat",
+        "Harga reseller",
+        "Support via WhatsApp"
+      ],
+      "product_images": [
+        {
+          "id": "img-ml",
+          "image_url": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Mobile Legends Diamond",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-valorant-points",
+      "name": "Valorant Points",
+      "slug": "valorant-points",
+      "short_description": "Top up Valorant Points untuk battle pass dan skin bundle.",
+      "description": "Top up Valorant Points untuk battle pass, bundle skin, dan item in-game dengan proses mudah via WhatsApp.",
+      "price": 20000,
+      "promo_price": null,
+      "status": "available",
+      "category_id": "cat-topup",
+      "features": [
+        "Proses cepat",
+        "Aman",
+        "Cocok untuk gamer kompetitif"
+      ],
+      "product_images": [
+        {
+          "id": "img-valorant",
+          "image_url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Valorant Points",
+          "is_cover": true
+        }
+      ]
+    },
+    {
+      "id": "prod-preloved-owner",
+      "name": "Barang Bekas Owner (Preloved)",
+      "slug": "barang-bekas-owner-preloved",
+      "short_description": "Produk preloved pilihan dengan stok terbatas dan harga spesial.",
+      "description": "Kategori khusus barang bekas owner atau stok digital terbatas yang dijual dengan harga menarik selama masih tersedia.",
+      "price": 30000,
+      "promo_price": 25000,
+      "status": "limited",
+      "category_id": "cat-loak",
+      "features": [
+        "Stok terbatas",
+        "Harga spesial",
+        "Cek detail via WhatsApp"
+      ],
+      "product_images": [
+        {
+          "id": "img-preloved",
+          "image_url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=1200&q=80",
+          "alt_text": "Barang Bekas Owner",
+          "is_cover": true
+        }
+      ]
     }
   ],
   "testimonials": [
-    {"id": "ts-1", "customer_name": "Rina", "role": "Content Creator", "message": "Proses order cepat, admin responsif, dan akun langsung aktif. Web-nya juga bikin produk kelihatan lebih profesional.", "rating": 5},
-    {"id": "ts-2", "customer_name": "Fajar", "role": "Mahasiswa", "message": "Saya suka karena tinggal pilih produk lalu klik WhatsApp. Praktis banget buat order tanpa ribet checkout panjang.", "rating": 5},
-    {"id": "ts-3", "customer_name": "Nabila", "role": "UMKM Owner", "message": "Dashboard admin memudahkan saya update harga dan stok kapan saja. Cocok untuk jualan produk digital premium.", "rating": 5}
-  ]
+    {
+      "id": "ts-1",
+      "customer_name": "Rizky A",
+      "role": "Mahasiswa",
+      "message": "Proses cepat banget, baru bayar langsung dikirim. Recommended buat cari aplikasi premium murah.",
+      "rating": 5
+    },
+    {
+      "id": "ts-2",
+      "customer_name": "Dimas F",
+      "role": "Content Creator",
+      "message": "Harga bersahabat, admin fast respon, dan order via WhatsApp jadi simpel banget.",
+      "rating": 5
+    },
+    {
+      "id": "ts-3",
+      "customer_name": "Putri L",
+      "role": "Freelancer",
+      "message": "Sudah beberapa kali order di SteamSpace, sejauh ini aman dan pelayanannya enak.",
+      "rating": 5
+    },
+    {
+      "id": "ts-4",
+      "customer_name": "Agus S",
+      "role": "Gamer",
+      "message": "Steam Wallet dan top up game-nya cepat diproses. Cocok buat yang tidak mau ribet.",
+      "rating": 5
+    }
+  ],
+  "faqs": [
+    {
+      "id": "faq-1",
+      "question": "Apakah akun sharing atau private?",
+      "answer": "SteamSpace menyediakan akun sharing maupun private tergantung produk yang tersedia. Silakan tanyakan detailnya via WhatsApp sebelum order."
+    },
+    {
+      "id": "faq-2",
+      "question": "Apakah ada garansi?",
+      "answer": "Ya, setiap pembelian mendapatkan garansi 1x sesuai ketentuan produk dan kebijakan toko."
+    },
+    {
+      "id": "faq-3",
+      "question": "Apakah bisa refund?",
+      "answer": "Maaf, semua transaksi yang sudah diproses tidak dapat di-refund."
+    },
+    {
+      "id": "faq-4",
+      "question": "Bagaimana cara order?",
+      "answer": "Pilih produk yang diinginkan lalu klik tombol order via WhatsApp. Pesan otomatis akan terisi dengan nama produk, kategori, dan harga."
+    },
+    {
+      "id": "faq-5",
+      "question": "Pembayaran via apa?",
+      "answer": "Pembayaran saat ini melalui transfer (TF). Detail rekening akan diberikan admin saat proses order."
+    }
+  ],
+  "homepage": {
+    "hero_title": "SteamSpace",
+    "hero_subtitle": "Portal Game, Aplikasi Premium, dan Produk Digital Terpercaya",
+    "about_title": "Tentang SteamSpace",
+    "about_text": "SteamSpace adalah portal produk digital yang menyediakan game, aplikasi premium, akun digital, dan berbagai layanan digital dengan harga terjangkau serta proses pembelian cepat melalui WhatsApp.",
+    "cta_title": "Temukan produk digital terbaik untuk kebutuhan harianmu.",
+    "cta_button": "Jelajahi Produk",
+    "help_badge": "Butuh Bantuan?",
+    "help_text": "Chat Admin",
+    "advantages": [
+      "Proses Cepat",
+      "Anti Ribet",
+      "Bergaransi",
+      "Support 24 Jam",
+      "Akun Fresh",
+      "Harga Reseller"
+    ],
+    "featured_product_ids": [
+      "prod-chatgpt-plus",
+      "prod-canva-pro",
+      "prod-youtube-premium"
+    ],
+    "featured_testimonial_ids": [
+      "ts-1",
+      "ts-2",
+      "ts-3"
+    ]
+  }
 }
