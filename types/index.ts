@@ -1,8 +1,11 @@
+export type CategoryIcon = "app" | "gamepad" | "box" | "play" | "sparkles" | "music" | "cloud";
+
 export type Category = {
   id: string;
   name: string;
   slug: string;
   description: string | null;
+  icon?: CategoryIcon;
 };
 
 export type ProductImage = {
@@ -25,8 +28,8 @@ export type Product = {
   status: ProductStatus;
   category_id: string;
   category?: Category;
-  product_images?: ProductImage[];
   features?: string[];
+  product_images?: ProductImage[];
 };
 
 export type Testimonial = {
@@ -35,4 +38,37 @@ export type Testimonial = {
   role: string;
   message: string;
   rating: number;
+};
+
+export type StoreSettings = {
+  name: string;
+  slogan: string;
+  hero: string;
+  description: string;
+  whatsapp: string;
+  email: string;
+  hours: string;
+  instagram: string;
+  tiktok: string;
+  accent: string;
+};
+
+export type HomepageContent = {
+  hero_title: string;
+  hero_subtitle: string;
+  about_title: string;
+  about_text: string;
+  cta_title: string;
+  cta_button: string;
+  help_badge: string;
+  help_text: string;
+  advantages: string[];
+  featured_product_ids: string[];
+  featured_testimonial_ids: string[];
+};
+
+export type FaqItem = {
+  id: string;
+  question: string;
+  answer: string;
 };
