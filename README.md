@@ -1,43 +1,72 @@
-# Premium App Store
+# SteamSpace v5
 
-Website katalog aplikasi premium dengan 2 sisi:
-- sisi pembeli untuk melihat katalog dan order via WhatsApp
-- sisi admin untuk login, tambah/edit/hapus produk, dan upload gambar produk secara lokal
+SteamSpace v5 adalah starter project toko digital berbasis Next.js + Tailwind CSS dengan 2 sisi utama:
 
-## Fitur lokal yang sudah aktif
-- Login admin dengan cookie session
-- CRUD produk tersimpan ke `data/store.json`
-- Upload gambar produk ke `public/uploads`
-- Katalog pembeli otomatis membaca data terbaru
-- Tombol WhatsApp otomatis mengikuti nama produk, kategori, dan harga
+- buyer side untuk katalog produk digital
+- admin side untuk login khusus dan mengelola produk, kategori, testimoni, serta pengaturan toko
+
+Versi ini memakai penyimpanan **lokal** dulu supaya mudah dijalankan.
+
+## Fitur utama
+
+- branding penuh SteamSpace
+- logo SteamSpace sudah dimasukkan
+- light mode default + toggle dark mode
+- home, produk, detail produk, FAQ, testimoni, kontak
+- order via WhatsApp otomatis
+- admin login lokal
+- CRUD produk lokal
+- CRUD kategori lokal
+- CRUD testimoni lokal
+- pengaturan toko via admin
+- upload gambar produk ke `public/uploads`
+- data toko tersimpan di `data/store.json`
 
 ## Login admin default
+
 - Email: `admin@lokal.com`
 - Password: `admin123`
 
-Bisa diganti lewat `.env.local`.
+## Jalankan di lokal
 
-## Menjalankan project
 ```bash
 npm install
 cp .env.example .env.local
 npm run dev
 ```
 
-Buka:
-- Store: `http://localhost:3000`
-- Admin: `http://localhost:3000/admin/login`
+Lalu buka:
+
+- buyer: `http://localhost:3000`
+- admin: `http://localhost:3000/admin/login`
 
 ## Catatan penting
-Mode upload lokal ini cocok untuk development atau VPS biasa.
-Kalau deploy ke Vercel, file yang diupload ke `public/uploads` tidak persisten. Untuk production sebaiknya pindah ke Supabase Storage atau Cloudinary.
 
-## Struktur data lokal
-- `data/store.json` → data kategori, produk, testimoni
-- `public/uploads` → file gambar hasil upload admin
+Karena versi ini memakai file lokal:
 
-## Deploy
-Untuk deploy production:
-1. pindahkan penyimpanan produk ke database
-2. pindahkan upload gambar ke cloud storage
-3. pertahankan UI yang sama lalu ganti hanya layer datanya
+- cocok untuk lokal atau server biasa
+- **kurang cocok di Vercel** untuk upload file persisten
+
+Kalau mau dipakai online serius, tahap berikutnya disarankan migrasi ke:
+
+- Supabase Database
+- Supabase Auth
+- Supabase Storage
+
+## Struktur penting
+
+- `app/(store)` → halaman buyer
+- `app/admin` → halaman admin
+- `components` → komponen UI
+- `data/store.json` → data lokal toko
+- `public/uploads` → hasil upload gambar
+- `public/steamspace-logo.svg` → logo SteamSpace
+
+
+## SteamSpace v8
+
+- Homepage fokus profil toko dan branding
+- Logo hero lebih besar
+- 3 produk populer bisa diatur dari admin
+- Konten homepage bisa diedit di `/admin/homepage`
+- Floating help button ke WhatsApp
