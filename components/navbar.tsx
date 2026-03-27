@@ -1,32 +1,52 @@
+"use client";
+
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Logo } from "@/components/logo";
+import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/theme-toggle";
+import Logo from "@/components/logo";
 
-const menu = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Produk" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/testimonials", label: "Testimoni" },
-  { href: "/contact", label: "Kontak" }
-];
+export default function Navbar() {
+  const [hidden, setHidden] = useState(false);
+  const [lastY, setLastY] = useState(0);
 
-export async function Navbar() {
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+
+      if (currentY > lastY && currentY > 80) {
+        setHidden(true); // scroll turun
+      } else {
+        setHidden(false); // scroll naik
+      }
+
+      setLastY(currentY);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastY]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/92 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/88">
-      <div className="container-app flex h-24 items-center justify-between gap-3 sm:h-20 sm:gap-4">
-        <Logo size="md" />
-        <nav className="hidden items-center gap-2 lg:flex">
-          {menu.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-slate-100 hover:text-brand dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white">
-              {item.label}
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
+      <div className="border-b border-slate-200/70 bg-white/85 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/75">
+        <div className="container-app flex items-center justify-between py-3">
+          <div className="min-w-0 flex-1">
+            <Logo />
+          </div>
+
+          <div className="ml-3 flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
+            <Link
+              href="/products"
+              className="rounded-2xl bg-brand px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark sm:px-5 sm:py-3"
+            >
+              Lihat Produk
             </Link>
-          ))}
-        </nav>
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <ThemeToggle />
-          <Link href="/products" className="btn-primary interactive-button hidden min-h-12 rounded-[26px] px-5 py-3 text-sm font-bold shadow-[0_12px_26px_rgba(59,130,246,0.22)] sm:inline-flex sm:min-h-0 sm:px-4 sm:py-2.5 sm:text-sm sm:shadow-neon">
-            <span className="max-w-[86px] text-center leading-5 sm:max-w-none sm:leading-normal">Lihat Produk</span>
-          </Link>
+          </div>
         </div>
       </div>
     </header>
