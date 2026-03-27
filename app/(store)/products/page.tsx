@@ -1,19 +1,16 @@
-import { ProductCard } from "@/components/product-card";
-import { SectionTitle } from "@/components/section-title";
-import { getAvailableProducts, getCategories } from "@/lib/data-store";
+import { ProductsCatalog } from "@/components/products-catalog";
+import { getAvailableProducts, getCategories, getSettings } from "@/lib/data-store";
 
 export default async function ProductsPage() {
-  const [categories, products] = await Promise.all([getCategories(), getAvailableProducts()]);
+  const [categories, products, settings] = await Promise.all([getCategories(), getAvailableProducts(), getSettings()]);
 
   return (
-    <section className="container-app py-20">
-      <SectionTitle badge="Semua Produk" title="Katalog produk digital premium" description="Pembeli dapat memilih produk berdasarkan kategori dan langsung order via WhatsApp." />
-      <div className="mb-8 flex flex-wrap gap-3">
-        {categories.map((category) => <span key={category.id} className="badge">{category.name}</span>)}
+    <section className="container-app py-10 sm:py-14">
+      <div className="mb-7 sm:mb-8">
+        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-brand">Produk</p>
+        <h1 className="mt-3 text-[2.5rem] font-black tracking-[-0.05em] text-slate-950 dark:text-white sm:mt-2 sm:text-3xl sm:tracking-tight">Katalog SteamSpace</h1>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {products.map((product) => <ProductCard key={product.id} product={product} />)}
-      </div>
+      <ProductsCatalog products={products} categories={categories} phone={settings.whatsapp} />
     </section>
   );
 }

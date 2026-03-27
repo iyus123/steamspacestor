@@ -6,6 +6,10 @@
   color-scheme: light;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -15,7 +19,7 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-white text-slate-900 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
 }
 
 .container-app {
@@ -23,17 +27,90 @@ body {
 }
 
 .card {
-  @apply rounded-3xl border border-slate-200 bg-white shadow-premium;
+  @apply rounded-3xl border border-slate-200/80 bg-white shadow-premium transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900;
 }
 
 .badge {
-  @apply inline-flex items-center rounded-full border border-brand/20 bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-dark;
+  @apply inline-flex items-center rounded-full border border-brand/20 bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-dark dark:border-brand/25 dark:bg-brand/10 dark:text-blue-200;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-3 font-semibold text-white transition hover:bg-brand-dark;
+  @apply inline-flex items-center justify-center rounded-2xl bg-brand px-5 py-3 font-semibold text-white shadow-neon transition hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand/40;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100;
+  @apply inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800;
+}
+
+.input {
+  @apply w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-brand dark:border-slate-700 dark:bg-slate-950;
+}
+
+.textarea {
+  @apply min-h-32 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-brand dark:border-slate-700 dark:bg-slate-950;
+}
+
+
+@layer utilities {
+  .interactive-card {
+    @apply transition duration-300 ease-out will-change-transform hover:-translate-y-1.5 hover:shadow-[0_22px_45px_rgba(15,23,42,0.14)] active:scale-[0.99] dark:hover:shadow-[0_24px_50px_rgba(2,6,23,0.45)];
+  }
+
+  .interactive-button {
+    @apply transition duration-200 active:scale-[0.98];
+  }
+
+  .soft-ring {
+    @apply ring-1 ring-slate-200/70 dark:ring-slate-800/80;
+  }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.24); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(59,130,246,0); }
+}
+
+@keyframes shimmer-slide {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(130%); }
+}
+
+.float-soft {
+  animation: float-soft 5.5s ease-in-out infinite;
+}
+
+.pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.shimmer-mask::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.18) 48%, transparent 70%);
+  transform: translateX(-130%);
+  animation: shimmer-slide 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.snap-x-mandatory {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
