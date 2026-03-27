@@ -1,21 +1,18 @@
 import "./globals.css";
-import Footer from "@/components/footer";
-import HelpButton from "@/components/help-button";
-import Navbar from "@/components/navbar";
 
-export default function StoreLayout({
+export const metadata = {
+  title: "SteamSpace",
+  description: "Portal produk digital",
+};
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Navbar />
-      <main className="pt-24 sm:pt-28">
-        {children}
-      </main>
-      <HelpButton />
-      <Footer />
-    </>
+    <html lang="id">
+      <body>{children}</body>
+    </html>
   );
 }
