@@ -2,11 +2,11 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { getSettings } from "@/lib/data-store";
 
-export async function Footer() {
-  const settings = await getSettings();
+export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
-      <div className="container-app grid gap-10 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
+    <footer className="border-t border-slate-200 bg-white py-8 dark:border-slate-800 dark:bg-slate-950">
+      <div className="container-app">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
         <div>
           <Logo withText />
           <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 dark:text-slate-400">{settings.slogan}</p>
