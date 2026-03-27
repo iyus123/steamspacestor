@@ -1,29 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/theme-toggle";
-import Logo from "@/components/logo";
 
 export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [lastY, setLastY] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    const handleScroll = () => {
       const currentY = window.scrollY;
 
       if (currentY > lastY && currentY > 80) {
-        setHidden(true); // scroll turun
+        setHidden(true);
       } else {
-        setHidden(false); // scroll naik
+        setHidden(false);
       }
 
       setLastY(currentY);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [lastY]);
 
   return (
@@ -32,17 +35,35 @@ export default function Navbar() {
         hidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="border-b border-slate-200/70 bg-white/85 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/75">
-        <div className="container-app flex items-center justify-between py-3">
-          <div className="min-w-0 flex-1">
-            <Logo />
-          </div>
+      <div className="border-b border-slate-200/70 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/85">
+        <div className="container-app flex items-center justify-between gap-3 py-3">
+          <Link href="/" className="flex min-w-0 flex-1 items-center gap-3">
+            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:h-14 sm:w-14">
+              <Image
+                src="/steamspace-logo-v6.png"
+                alt="SteamSpace"
+                fill
+                className="object-contain p-1.5"
+                priority
+              />
+            </div>
 
-          <div className="ml-3 flex items-center gap-2 sm:gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-lg font-black leading-none text-slate-950 dark:text-white sm:text-2xl">
+                SteamSpace
+              </p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400 sm:text-sm">
+                Portal produk digital
+              </p>
+            </div>
+          </Link>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <ThemeToggle />
+
             <Link
               href="/products"
-              className="rounded-2xl bg-brand px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark sm:px-5 sm:py-3"
+              className="inline-flex items-center justify-center rounded-2xl bg-brand px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark active:scale-[0.98] sm:px-5"
             >
               Lihat Produk
             </Link>
