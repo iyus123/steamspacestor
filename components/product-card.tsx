@@ -2,18 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Product } from "@/types";
-import { getCategoryById, getWhatsAppLink } from "@/lib/data-store";
 
-export async function ProductCard({
+export function ProductCard({
   product,
-  phone,
+  categoryName,
+  whatsappLink,
 }: {
   product: Product;
-  phone: string;
+  categoryName: string;
+  whatsappLink: string;
 }) {
-  const category = await getCategoryById(product.category_id);
-  const whatsappLink = getWhatsAppLink(product, category?.name ?? "Produk", phone);
-
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
       <div className="relative aspect-[4/2.4] overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -39,7 +37,7 @@ export async function ProductCard({
 
       <div className="p-3">
         <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand">
-          {category?.name ?? "Produk Digital"}
+          {categoryName}
         </p>
 
         <h3 className="line-clamp-2 text-base font-black leading-tight text-slate-950 dark:text-white sm:text-lg">
