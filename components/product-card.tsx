@@ -2,36 +2,66 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Product } from "@/types";
-import { createWhatsAppLink, formatCurrency, statusLabel } from "@/lib/utils";
+import { getCategoryById, getWhatsAppLink } from "@/lib/data-store";
 
-export function ProductCard({ product, phone = "6295320724689" }: { product: Product; phone?: string }) {
-  const cover = product.product_images?.find((img) => img.is_cover) ?? product.product_images?.[0];
-  const price = formatCurrency(product.promo_price ?? product.price);
-  const whatsappLink = createWhatsAppLink({
-    phone,
-    productName: product.name,
-    category: product.category?.name || "Lainnya",
-    price
-  });
+export async function FeaturedProductCard({ product }: { product: Product }) {
+  const category = await getCategoryById(product.category_id);
 
   return (
-    <div className="card interactive-card group overflow-hidden rounded-[26px] sm:rounded-[28px]">
-      <div className="relative h-56 w-full overflow-hidden bg-slate-100 dark:bg-slate-800 sm:h-52">
-        <Image src={cover?.image_url || "/placeholder.png"} alt={cover?.alt_text || product.name} fill className="object-cover transition duration-700 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
-        <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur dark:bg-slate-950/80 dark:text-slate-200">{statusLabel(product.status)}</div>
-      </div>
-      <div className="space-y-3 p-4 sm:space-y-4 sm:p-5">
-        <div className="space-y-1.5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand sm:hidden">{product.category?.name}</p>
-          <h3 className="line-clamp-2 text-[1.7rem] font-black tracking-[-0.04em] text-slate-950 dark:text-white sm:line-clamp-1 sm:text-lg sm:tracking-normal">{product.name}</h3>
-          <p className="text-lg font-black text-slate-950 dark:text-white sm:text-2xl">{price}</p>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+      <div className="relative aspect-[4/2.5] overflow-hidden bg-slate-100 dark:bg-slate-800">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover transition duration-500 hover:scale-105"
+        />
+
+        <div className="absolute left-3 top-3">
+          <span
+            className={`rounded-full px-3 py-1 text-[10px] font-semibold shadow-sm ${
+              product.available
+                ? "bg-emerald-500 text-white"
+                : "bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-100"
+            }`}
+          >
+            {product.available ? "Tersedia" : "Kosong"}
+          </span>
         </div>
-        <div className="grid grid-cols-1 gap-2 sm:flex sm:gap-3">
-          <Link href={`/products/${product.slug}`} className="btn-secondary interactive-button flex-1 gap-2 rounded-[18px] px-4 py-3 text-sm font-semibold sm:rounded-2xl sm:px-4 sm:py-2.5">
-            Detail <ArrowUpRight size={16} />
+      </div>
+
+      <div className="p-3 sm:p-4">
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand sm:text-[11px]">
+          {category?.name ?? "Produk Digital"}
+        </p>
+
+        <h3 className="line-clamp-2 text-lg font-black leading-tight text-slate-950 dark:text-white sm:text-xl">
+          {product.name}
+        </h3>
+
+        <p className="mt-2 text-base font-bold text-slate-950 dark:text-white sm:text-lg">
+          {product.price}
+        </p>
+
+        {product.short_description && (
+          <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500 dark:text-slate-400 sm:text-sm">
+            {product.short_description}
+          </p>
+        )}
+
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Link
+            href={`/products/${product.slug}`}
+            className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 active:scale-[0.98] dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            Detail <ArrowUpRight size={15} className="ml-1" />
           </Link>
-          <Link href={whatsappLink} target="_blank" className="btn-primary interactive-button flex-1 rounded-[18px] px-4 py-3 text-sm font-semibold sm:rounded-2xl sm:px-4 sm:py-2.5">
+
+          <Link
+            href={getWhatsAppLink(product, category?.name ?? "Produk")}
+            className="inline-flex items-center justify-center rounded-xl bg-brand px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark active:scale-[0.98]"
+            target="_blank"
+          >
             Order
           </Link>
         </div>
