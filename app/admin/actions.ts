@@ -1,218 +1,387 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { buildProductPayload, getProductById, readStore, slugify, updateHomepageContent, updateSettings, writeStore } from "@/lib/data-store";
+import { revalidatePath } from "next/cache";
+import slugify from "slugify";
+import { supabaseAdmin } from "@/lib/supabase";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@lokal.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
-const SESSION_COOKIE = "admin-session";
-
-export async function loginAdmin(formData: FormData) {
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "").trim();
-
-  if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
-    redirect("/admin/login?error=Email%20atau%20password%20salah");
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, "authenticated", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 60 * 60 * 8 });
-  redirect("/admin/dashboard");
+function toText(value: FormDataEntryValue | null) {
+  return String(value ?? "").trim();
 }
 
-export async function logoutAdmin() {
-  const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE);
-  redirect("/admin/login");
-}
-
-function validateProductForm(formData: FormData) {
-  const required = ["name", "short_description", "description", "category_id"];
-  for (const item of required) {
-    if (!String(formData.get(item) ?? "").trim()) throw new Error("Semua field utama produk wajib diisi.");
-  }
-}
-
-export async function createProductAction(formData: FormData) {
-  validateProductForm(formData);
-  const store = await readStore();
-  const payload = await buildProductPayload(formData);
-  store.products.unshift(payload);
-  await writeStore(store);
-  redirect("/admin/products?success=Produk%20berhasil%20ditambahkan");
-}
-
-export async function updateProductAction(productId: string, formData: FormData) {
-  validateProductForm(formData);
-  const store = await readStore();
-  const current = await getProductById(productId);
-  if (!current) redirect("/admin/products?error=Produk%20tidak%20ditemukan");
-  const payload = await buildProductPayload(formData, current);
-  store.products = store.products.map((product) => (product.id === productId ? payload : product));
-  await writeStore(store);
-  redirect("/admin/products?success=Produk%20berhasil%20diupdate");
-}
-
-export async function deleteProductAction(formData: FormData) {
-  const id = String(formData.get("id") ?? "").trim();
-  const store = await readStore();
-  store.products = store.products.filter((product) => product.id !== id);
-  await writeStore(store);
-  redirect("/admin/products?success=Produk%20berhasil%20dihapus");
-}
-
-export async function updateProductStatusAction(formData: FormData) {
-  const id = String(formData.get("id") ?? "").trim();
-  const status = String(formData.get("status") ?? "available").trim();
-  const store = await readStore();
-  store.products = store.products.map((product) => (product.id === id ? { ...product, status: status as never } : product));
-  await writeStore(store);
-  redirect("/admin/products?success=Status%20produk%20berhasil%20diubah");
-}
-
-function createId(prefix: string) {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function validateCategoryForm(formData: FormData) {
-  if (!String(formData.get("name") ?? "").trim()) throw new Error("Nama kategori wajib diisi.");
-}
-
-export async function createCategoryAction(formData: FormData) {
-  validateCategoryForm(formData);
-  const store = await readStore();
-  const name = String(formData.get("name") ?? "").trim();
-  const slugInput = String(formData.get("slug") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim();
-  const slug = slugify(slugInput || name);
-  if (store.categories.some((category) => category.slug === slug)) redirect("/admin/categories?error=Slug%20kategori%20sudah%20dipakai");
-  const icon = String(formData.get("icon") ?? "app").trim() || "app";
-  store.categories.unshift({ id: createId("cat"), name, slug, description: description || null, icon: icon as never });
-  await writeStore(store);
-  redirect("/admin/categories?success=Kategori%20berhasil%20ditambahkan");
-}
-
-export async function updateCategoryAction(formData: FormData) {
-  validateCategoryForm(formData);
-  const store = await readStore();
-  const id = String(formData.get("id") ?? "").trim();
-  const name = String(formData.get("name") ?? "").trim();
-  const slugInput = String(formData.get("slug") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim();
-  const slug = slugify(slugInput || name);
-  const icon = String(formData.get("icon") ?? "app").trim() || "app";
-  if (store.categories.some((category) => category.id !== id && category.slug === slug)) redirect("/admin/categories?error=Slug%20kategori%20sudah%20dipakai");
-  store.categories = store.categories.map((category) => category.id === id ? { ...category, name, slug, description: description || null, icon: icon as never } : category);
-  await writeStore(store);
-  redirect("/admin/categories?success=Kategori%20berhasil%20diupdate");
-}
-
-export async function deleteCategoryAction(formData: FormData) {
-  const id = String(formData.get("id") ?? "").trim();
-  const store = await readStore();
-  const totalProducts = store.products.filter((product) => product.category_id === id).length;
-  if (totalProducts > 0) redirect("/admin/categories?error=Kategori%20masih%20dipakai%20oleh%20produk");
-  store.categories = store.categories.filter((category) => category.id !== id);
-  store.homepage.featured_product_ids = store.homepage.featured_product_ids.filter((featuredId) => store.products.some((product) => product.id === featuredId));
-  await writeStore(store);
-  redirect("/admin/categories?success=Kategori%20berhasil%20dihapus");
-}
-
-function validateTestimonial(formData: FormData) {
-  const required = ["customer_name", "role", "message"];
-  for (const item of required) {
-    if (!String(formData.get(item) ?? "").trim()) throw new Error("Field testimoni wajib diisi.");
-  }
-}
-
-export async function createTestimonialAction(formData: FormData) {
-  validateTestimonial(formData);
-  const store = await readStore();
-  store.testimonials.unshift({
-    id: createId("ts"),
-    customer_name: String(formData.get("customer_name") ?? "").trim(),
-    role: String(formData.get("role") ?? "").trim(),
-    message: String(formData.get("message") ?? "").trim(),
-    rating: Number(formData.get("rating") ?? 5) || 5
-  });
-  await writeStore(store);
-  redirect("/admin/testimonials?success=Testimoni%20berhasil%20ditambahkan");
-}
-
-export async function updateTestimonialAction(formData: FormData) {
-  validateTestimonial(formData);
-  const id = String(formData.get("id") ?? "").trim();
-  const store = await readStore();
-  store.testimonials = store.testimonials.map((item) =>
-    item.id === id
-      ? {
-          ...item,
-          customer_name: String(formData.get("customer_name") ?? "").trim(),
-          role: String(formData.get("role") ?? "").trim(),
-          message: String(formData.get("message") ?? "").trim(),
-          rating: Number(formData.get("rating") ?? 5) || 5
-        }
-      : item
-  );
-  await writeStore(store);
-  redirect("/admin/testimonials?success=Testimoni%20berhasil%20diupdate");
-}
-
-export async function deleteTestimonialAction(formData: FormData) {
-  const id = String(formData.get("id") ?? "").trim();
-  const store = await readStore();
-  store.testimonials = store.testimonials.filter((item) => item.id !== id);
-  store.homepage.featured_testimonial_ids = store.homepage.featured_testimonial_ids.filter((featuredId) => featuredId !== id);
-  await writeStore(store);
-  redirect("/admin/testimonials?success=Testimoni%20berhasil%20dihapus");
-}
-
-export async function updateStoreSettingsAction(formData: FormData) {
-  await updateSettings({
-    name: String(formData.get("name") ?? "").trim(),
-    slogan: String(formData.get("slogan") ?? "").trim(),
-    hero: String(formData.get("hero") ?? "").trim(),
-    description: String(formData.get("description") ?? "").trim(),
-    whatsapp: String(formData.get("whatsapp") ?? "").trim(),
-    email: String(formData.get("email") ?? "").trim(),
-    hours: String(formData.get("hours") ?? "").trim(),
-    instagram: String(formData.get("instagram") ?? "").trim(),
-    tiktok: String(formData.get("tiktok") ?? "").trim(),
-    accent: String(formData.get("accent") ?? "").trim() || "#3B82F6"
-  });
-  redirect("/admin/settings?success=Pengaturan%20toko%20berhasil%20disimpan");
+function toNumber(value: FormDataEntryValue | null) {
+  const cleaned = String(value ?? "").replace(/[^\d]/g, "");
+  return Number(cleaned || 0);
 }
 
 function parseLines(value: FormDataEntryValue | null) {
   return String(value ?? "")
-    .split(/\r?\n/)
+    .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
 }
 
-function pickValues(formData: FormData, baseName: string, limit: number) {
-  const values: string[] = [];
-  for (let index = 1; index <= limit; index += 1) {
-    const value = String(formData.get(`${baseName}_${index}`) ?? "").trim();
-    if (value && !values.includes(value)) values.push(value);
+function parseUuidListFromForm(formData: FormData, prefix: string, total: number) {
+  const result: string[] = [];
+
+  for (let i = 1; i <= total; i++) {
+    const value = toText(formData.get(`${prefix}_${i}`));
+    if (value) result.push(value);
   }
-  return values;
+
+  return result;
 }
 
-export async function updateHomepageAction(formData: FormData) {
-  await updateHomepageContent({
-    hero_title: String(formData.get("hero_title") ?? "").trim(),
-    hero_subtitle: String(formData.get("hero_subtitle") ?? "").trim(),
-    about_title: String(formData.get("about_title") ?? "").trim(),
-    about_text: String(formData.get("about_text") ?? "").trim(),
-    cta_title: String(formData.get("cta_title") ?? "").trim(),
-    cta_button: String(formData.get("cta_button") ?? "").trim(),
-    help_badge: String(formData.get("help_badge") ?? "").trim(),
-    help_text: String(formData.get("help_text") ?? "").trim(),
-    advantages: parseLines(formData.get("advantages")),
-    featured_product_ids: pickValues(formData, "featured_product_id", 3),
-    featured_testimonial_ids: pickValues(formData, "featured_testimonial_id", 3)
+function getCategorySlug(name: string) {
+  return slugify(name, { lower: true, strict: true, trim: true });
+}
+
+function getProductSlug(name: string) {
+  return slugify(name, { lower: true, strict: true, trim: true });
+}
+
+async function uploadProductImage(file: File, productId: string, altText: string) {
+  if (!file || file.size === 0) return null;
+
+  const ext = file.name.split(".").pop() || "jpg";
+  const fileName = `${productId}-${Date.now()}.${ext}`;
+  const filePath = `products/${fileName}`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from("product-images")
+    .upload(filePath, buffer, {
+      contentType: file.type || "image/jpeg",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    throw new Error(`Gagal upload gambar: ${uploadError.message}`);
+  }
+
+  const { data: publicUrlData } = supabaseAdmin.storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+  return publicUrlData.publicUrl;
+}
+
+/* =========================
+   PRODUCT
+========================= */
+
+export async function createProductAction(formData: FormData) {
+  const name = toText(formData.get("name"));
+  const shortDescription = toText(formData.get("short_description"));
+  const description = toText(formData.get("description"));
+  const categoryId = toText(formData.get("category_id"));
+  const status = toText(formData.get("status")) || "available";
+  const price = toNumber(formData.get("price"));
+  const promoPriceRaw = toNumber(formData.get("promo_price"));
+  const promoPrice = promoPriceRaw > 0 ? promoPriceRaw : null;
+  const features = parseLines(formData.get("features"));
+  const imageFile = formData.get("image") as File | null;
+
+  if (!name) throw new Error("Nama produk wajib diisi.");
+  if (!categoryId) throw new Error("Kategori wajib dipilih.");
+  if (!price) throw new Error("Harga produk wajib diisi.");
+
+  const slug = getProductSlug(name);
+
+  const { data: product, error: productError } = await supabaseAdmin
+    .from("products")
+    .insert({
+      name,
+      slug,
+      short_description: shortDescription,
+      description,
+      price,
+      promo_price: promoPrice,
+      status,
+      category_id: categoryId,
+      features,
+    })
+    .select("*")
+    .single();
+
+  if (productError || !product) {
+    throw new Error(productError?.message || "Gagal membuat produk.");
+  }
+
+  if (imageFile && imageFile.size > 0) {
+    const imageUrl = await uploadProductImage(imageFile, product.id, name);
+
+    if (imageUrl) {
+      const { error: imageInsertError } = await supabaseAdmin
+        .from("product_images")
+        .insert({
+          product_id: product.id,
+          image_url: imageUrl,
+          alt_text: name,
+          is_cover: true,
+        });
+
+      if (imageInsertError) {
+        throw new Error(`Gagal menyimpan data gambar: ${imageInsertError.message}`);
+      }
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
+}
+
+export async function updateProductStatusAction(formData: FormData) {
+  const productId = toText(formData.get("product_id"));
+  const status = toText(formData.get("status"));
+
+  if (!productId) throw new Error("ID produk tidak ditemukan.");
+  if (!status) throw new Error("Status produk tidak ditemukan.");
+
+  const { error } = await supabaseAdmin
+    .from("products")
+    .update({ status })
+    .eq("id", productId);
+
+  if (error) {
+    throw new Error(`Gagal update status produk: ${error.message}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
+}
+
+export async function deleteProductAction(formData: FormData) {
+  const productId = toText(formData.get("product_id"));
+
+  if (!productId) throw new Error("ID produk tidak ditemukan.");
+
+  const { data: images } = await supabaseAdmin
+    .from("product_images")
+    .select("id, image_url")
+    .eq("product_id", productId);
+
+  if (images?.length) {
+    const filePaths = images
+      .map((img) => {
+        const marker = "/product-images/";
+        const index = img.image_url.indexOf(marker);
+        if (index === -1) return null;
+        return img.image_url.slice(index + marker.length);
+      })
+      .filter(Boolean) as string[];
+
+    if (filePaths.length) {
+      await supabaseAdmin.storage.from("product-images").remove(filePaths);
+    }
+  }
+
+  const { error } = await supabaseAdmin
+    .from("products")
+    .delete()
+    .eq("id", productId);
+
+  if (error) {
+    throw new Error(`Gagal menghapus produk: ${error.message}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
+}
+
+/* =========================
+   CATEGORY
+========================= */
+
+export async function createCategoryAction(formData: FormData) {
+  const name = toText(formData.get("name"));
+  const description = toText(formData.get("description")) || null;
+  const icon = toText(formData.get("icon")) || "app";
+
+  if (!name) throw new Error("Nama kategori wajib diisi.");
+
+  const slug = getCategorySlug(name);
+
+  const { error } = await supabaseAdmin.from("categories").insert({
+    name,
+    slug,
+    description,
+    icon,
   });
-  redirect("/admin/homepage?success=Konten%20homepage%20berhasil%20disimpan");
+
+  if (error) {
+    throw new Error(`Gagal membuat kategori: ${error.message}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin/categories");
+  revalidatePath("/admin/products/new");
+}
+
+export async function deleteCategoryAction(formData: FormData) {
+  const categoryId = toText(formData.get("category_id"));
+
+  if (!categoryId) throw new Error("ID kategori tidak ditemukan.");
+
+  const { data: products, error: checkError } = await supabaseAdmin
+    .from("products")
+    .select("id")
+    .eq("category_id", categoryId)
+    .limit(1);
+
+  if (checkError) {
+    throw new Error(`Gagal memeriksa kategori: ${checkError.message}`);
+  }
+
+  if (products && products.length > 0) {
+    throw new Error("Kategori masih dipakai oleh produk dan tidak bisa dihapus.");
+  }
+
+  const { error } = await supabaseAdmin
+    .from("categories")
+    .delete()
+    .eq("id", categoryId);
+
+  if (error) {
+    throw new Error(`Gagal menghapus kategori: ${error.message}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin/categories");
+  revalidatePath("/admin/products/new");
+}
+
+/* =========================
+   HOMEPAGE
+========================= */
+
+export async function updateHomepageAction(formData: FormData) {
+  const heroTitle = toText(formData.get("hero_title"));
+  const heroSubtitle = toText(formData.get("hero_subtitle"));
+  const aboutTitle = toText(formData.get("about_title"));
+  const aboutText = toText(formData.get("about_text"));
+  const ctaTitle = toText(formData.get("cta_title"));
+  const ctaButton = toText(formData.get("cta_button"));
+  const helpBadge = toText(formData.get("help_badge"));
+  const helpText = toText(formData.get("help_text"));
+  const advantages = parseLines(formData.get("advantages"));
+  const featuredProductIds = parseUuidListFromForm(formData, "featured_product_id", 3);
+  const featuredTestimonialIds = parseUuidListFromForm(formData, "featured_testimonial_id", 3);
+
+  const { data: existing, error: findError } = await supabaseAdmin
+    .from("homepage_content")
+    .select("id")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (findError) {
+    throw new Error(`Gagal membaca data homepage: ${findError.message}`);
+  }
+
+  const payload = {
+    hero_title: heroTitle,
+    hero_subtitle: heroSubtitle,
+    about_title: aboutTitle,
+    about_text: aboutText,
+    cta_title: ctaTitle,
+    cta_button: ctaButton,
+    help_badge: helpBadge,
+    help_text: helpText,
+    advantages,
+    featured_product_ids: featuredProductIds,
+    featured_testimonial_ids: featuredTestimonialIds,
+  };
+
+  if (existing?.id) {
+    const { error } = await supabaseAdmin
+      .from("homepage_content")
+      .update(payload)
+      .eq("id", existing.id);
+
+    if (error) {
+      throw new Error(`Gagal update homepage: ${error.message}`);
+    }
+  } else {
+    const { error } = await supabaseAdmin
+      .from("homepage_content")
+      .insert(payload);
+
+    if (error) {
+      throw new Error(`Gagal membuat homepage content: ${error.message}`);
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/homepage");
+}
+
+/* =========================
+   STORE SETTINGS
+========================= */
+
+export async function updateStoreSettingsAction(formData: FormData) {
+  const name = toText(formData.get("name"));
+  const slogan = toText(formData.get("slogan"));
+  const hero = toText(formData.get("hero"));
+  const description = toText(formData.get("description"));
+  const whatsapp = toText(formData.get("whatsapp"));
+  const email = toText(formData.get("email"));
+  const hours = toText(formData.get("hours"));
+  const instagram = toText(formData.get("instagram"));
+  const tiktok = toText(formData.get("tiktok"));
+  const accent = toText(formData.get("accent")) || "#3B82F6";
+
+  const { data: existing, error: findError } = await supabaseAdmin
+    .from("store_settings")
+    .select("id")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (findError) {
+    throw new Error(`Gagal membaca settings toko: ${findError.message}`);
+  }
+
+  const payload = {
+    name,
+    slogan,
+    hero,
+    description,
+    whatsapp,
+    email,
+    hours,
+    instagram,
+    tiktok,
+    accent,
+  };
+
+  if (existing?.id) {
+    const { error } = await supabaseAdmin
+      .from("store_settings")
+      .update(payload)
+      .eq("id", existing.id);
+
+    if (error) {
+      throw new Error(`Gagal update settings toko: ${error.message}`);
+    }
+  } else {
+    const { error } = await supabaseAdmin
+      .from("store_settings")
+      .insert(payload);
+
+    if (error) {
+      throw new Error(`Gagal membuat settings toko: ${error.message}`);
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/contact");
+  revalidatePath("/admin/settings");
 }
